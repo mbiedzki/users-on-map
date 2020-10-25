@@ -1,0 +1,20 @@
+.mat-table {
+
+}
+
+.mat-header-cell, .mat-sort-header{
+  background-color: #3F51B5;
+  color: white;
+}
+
+.mat-row:nth-child(even){
+  background-color:#EDF1F5;
+}
+
+.mat-row:nth-child(odd){
+  background-color:#FDFDFB;
+}
+
+.mat-row-link {
+  cursor: pointer;
+}

@@ -1,0 +1,24 @@
+<div class="mat-elevation-z8">
+  <mat-table [dataSource]="usersList">
+
+    <ng-container matColumnDef="lastName">
+      <mat-header-cell *matHeaderCellDef>Nazwisko</mat-header-cell>
+      <mat-cell *matCellDef="let user"> {{user.lastName}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="firstName">
+      <mat-header-cell *matHeaderCellDef>Imię</mat-header-cell>
+      <mat-cell *matCellDef="let user"> {{user.firstName}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="email">
+      <mat-header-cell *matHeaderCellDef>e-mail</mat-header-cell>
+      <mat-cell *matCellDef="let user"> {{user.email}}</mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="columnsToDisplay"></mat-header-row>
+    <mat-row *matRowDef="let user; columns: columnsToDisplay"
+             class="mat-row-link"></mat-row>
+
+  </mat-table>
+</div>
