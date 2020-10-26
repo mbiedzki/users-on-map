@@ -1,3 +1,16 @@
 #users_map {
   height: 700px;
 }
+
+#users_map .ol-attribution button {
+  width: 100px;
+}
+
+.ol-zoom {
+  top: 2px;
+  left: 5px;
+  position: absolute;
+  background: none !important;
+  border-radius: none !important;
+  padding: 0 !important;
+}

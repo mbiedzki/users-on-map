@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {UserListService} from './user-list.service';
 import {User} from './user';
+import {MatDialog} from '@angular/material/dialog';
+import {UserFormComponent} from '../user-form/user-form.component';
 
 @Component({
   selector: 'app-user-list',
@@ -8,11 +10,19 @@ import {User} from './user';
   styleUrls: ['./user-list.component.css']
 })
 export class UserListComponent implements OnInit {
-  columnsToDisplay: string[] = ['lastName', 'firstName', 'email'];
+  columnsToDisplay: string[] = ['lastName', 'firstName', 'town', 'email'];
   public usersList: Array<User>;
 
+  openForm(): any {
+    const dialogRef = this.dialog.open(UserFormComponent, {
+      height: '530px',
+      width: '600px',
+    });
+  }
+
   constructor(
-    public userListService: UserListService
+    public userListService: UserListService,
+    public dialog: MatDialog
   ) {
   }
 

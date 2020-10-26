@@ -7,14 +7,13 @@ import {User} from './user';
 export class UserListService {
   public usersList: Array<User> = [
     {
-      id: 1,
       firstName: 'Michał',
       lastName: 'Biedzki',
       email: 'mbiedzki@gmail.com',
       voivodeship: '',
       district: '',
       community: '',
-      town: '',
+      town: 'Warszawa',
       street: '',
       zip: '',
       number: '',
@@ -22,14 +21,13 @@ export class UserListService {
       latitude: 21.015057
     },
     {
-      id: 2,
       firstName: 'Jan',
       lastName: 'Kowalski',
       email: 'jan.kowalski@gmail.com',
       voivodeship: '',
       district: '',
       community: '',
-      town: '',
+      town: 'Poznań',
       street: '',
       zip: '',
       number: '',
