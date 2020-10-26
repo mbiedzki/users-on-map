@@ -10,4 +10,6 @@ export class User {
   street: string;
   zip: string;
   number: string;
+  longitude: number;
+  latitude: number
 }

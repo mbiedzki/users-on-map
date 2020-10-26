@@ -1,13 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-
+import {UserListService} from '../user-list/user-list.service';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import VectorLayer from 'ol/layer/Vector';
-import Style from 'ol/style/Style';
-import Icon from 'ol/style/Icon';
+import {Fill, Stroke, Circle, Style} from 'ol/style';
+import VectorSource from 'ol/source/Vector';
 import OSM from 'ol/source/OSM';
 import * as olProj from 'ol/proj';
 import TileLayer from 'ol/layer/Tile';
+import Feature from 'ol/Feature';
+import Point from 'ol/geom/Point';
+import {User} from '../user-list/user';
 
 @Component({
   selector: 'app-map',
@@ -16,10 +19,29 @@ import TileLayer from 'ol/layer/Tile';
 })
 export class MapComponent implements OnInit {
   map: any;
+  private usersList: Array<User> = [];
+  public points: Array<Feature> = [];
 
-  constructor() { }
+  constructor(
+    public userListService: UserListService
+  ) {}
 
   ngOnInit(): void {
+    const pointStyle = new Style({
+      image: new Circle({
+        radius: 7,
+        fill: new Fill({color: 'darkblue'}),
+        stroke: new Stroke({
+          color: 'white', width: 2
+        })
+      })
+    })
+    this.usersList = this.userListService.usersList;
+    this.usersList.forEach(user => {
+      this.points.push(new Feature({
+        geometry: new Point(olProj.fromLonLat([user.latitude, user.longitude]))
+      }));
+    });
     this.map = new Map({
       target: 'users_map',
       layers: [
@@ -32,6 +54,16 @@ export class MapComponent implements OnInit {
         zoom: 6.5
       })
     });
+    const layer = new VectorLayer({
+      source: new VectorSource({
+        features: this.points
+      }),
+      style: pointStyle
+    });
+    this.map.addLayer(layer);
+
+
+
   }
 
 }

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {UserListService} from './user-list.service';
 import {User} from './user';
 
 @Component({
@@ -7,43 +8,16 @@ import {User} from './user';
   styleUrls: ['./user-list.component.css']
 })
 export class UserListComponent implements OnInit {
-
-  public usersList: Array<User>;
   columnsToDisplay: string[] = ['lastName', 'firstName', 'email'];
+  public usersList: Array<User>;
 
-  constructor() {
-    // @ts-ignore
-    this.usersList = [
-      {
-        id: 1,
-        firstName: 'Michał',
-        lastName: 'Biedzki',
-        email: 'mbiedzki@gmail.com',
-        voivodeship: '',
-        district: '',
-        community: '',
-        town: '',
-        street: '',
-        zip: '',
-        number: '',
-      },
-      {
-        id: 2,
-        firstName: 'Jan',
-        lastName: 'Kowalski',
-        email: 'jan.kowalski@gmail.com',
-        voivodeship: '',
-        district: '',
-        community: '',
-        town: '',
-        street: '',
-        zip: '',
-        number: '',
-      }
-    ];
+  constructor(
+    public userListService: UserListService
+  ) {
   }
 
   ngOnInit(): void {
+    this.usersList = this.userListService.usersList;
   }
 
 }

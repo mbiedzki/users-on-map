@@ -11,9 +11,10 @@ body { margin: 5px; font-family: Roboto, "Helvetica Neue", sans-serif; }
   width: 46%;
   height: 700px;
   float: left;
-  padding: 20px;
-  border: 2px solid darkblue;
+  padding: 10px;
+  border: 2px solid darkgrey;
   margin-right: 5px;
+  margin-left: 5px;
 }
 
 .title {
