@@ -33,6 +33,20 @@ export class UserListService {
       number: '',
       longitude: 52.401666,
       latitude: 16.911550
+    },
+    {
+      firstName: 'Zbigniew',
+      lastName: 'Nowak',
+      email: 'z.nowak@gmail.com',
+      voivodeship: '',
+      district: '',
+      community: '',
+      town: 'Gdańsk',
+      street: '',
+      zip: '',
+      number: '',
+      longitude: 54.355532,
+      latitude: 18.644489
     }
   ];
   constructor() {}
