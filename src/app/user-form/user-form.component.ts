@@ -41,13 +41,14 @@ export class UserFormComponent {
     {name: 'wielkopolskie'},
     {name: 'zachodniopomorskie'},
   ];
-
   constructor(
     private fb: FormBuilder,
     public dialog: MatDialog
   ) {}
-
-  onSubmit() {
+  onSubmit(): any {
+    this.dialog.closeAll();
+  }
+  closeForm(): any {
     this.dialog.closeAll();
   }
 }

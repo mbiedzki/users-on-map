@@ -26,7 +26,10 @@
       <div class="row">
         <div class="col">
           <mat-form-field class="full-width">
-            <input matInput placeholder="Adres email" formControlName="email">
+            <input matInput placeholder="Adres email" formControlName="email" pattern="\S+@\S+\.\S+">
+            <mat-error *ngIf="userForm.controls['email'].hasError('pattern')">
+              Podałeś niepoprawny adres
+            </mat-error>
             <mat-error *ngIf="userForm.controls['email'].hasError('required')">
               Adres email jest <strong>wymagany</strong>
             </mat-error>
@@ -76,7 +79,7 @@
           <mat-form-field class="full-width">
             <input matInput #zip maxlength="5" placeholder="Kod pocztowy" type="text" formControlName="zip" pattern="^[0-9]{5}$">
             <mat-error *ngIf="userForm.controls['zip'].hasError('pattern')">
-              Kod pocztowy musi być w formacie <strong>XXXXX</strong>
+              Kod pocztowy musi być w formacie <strong>XXXXX</strong> i zawierać tylko cyfry
             </mat-error>
             <mat-error *ngIf="userForm.controls['zip'].hasError('required')">
               Kod pocztowy jest <strong>wymagany</strong>
@@ -105,7 +108,8 @@
       </div>
     </mat-card-content>
     <mat-card-actions>
-      <button mat-raised-button color="primary" type="submit" [disabled]="!userForm.valid || userForm.untouched">Dodaj</button>
+      <button mat-raised-button color="warn" type="submit" [disabled]="!userForm.valid || userForm.untouched">Dodaj</button>
+      <button mat-raised-button color="primary" type="button" on-click="closeForm()">Zamknij</button>
     </mat-card-actions>
   </mat-card>
 </form>
