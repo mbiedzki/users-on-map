@@ -1,27 +1,47 @@
 # UsersOnMap
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.2.0.
+## Zadanie
 
-## Development server
+Utworzyć aplikację webową w wybranej technologii umożliwiającą rejestrowanie i przeglądanie zarejestrowanych użytkowników. 
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Wymagania
 
-## Code scaffolding
+Formularz rejestracyjny powinien wymagać wprowadzenia następujących informacji:
+-Imię
+-Nazwisko
+-Adres email
+-Informacje adresowe z wykorzystaniem API (formularz w postaci hierarchicznej: województwo, powiat, gmina, itd...)
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Linki do API:
+
+https://capap.gugik.gov.pl/api/fts/hier/_cfg
+
+https://capap.gugik.gov.pl/api/fts/#_query2usingpost
+
+Podgląd listy zarejestrowanych użytkowników powinien składać się z:
+	
+- listy wszystkich użytkowników
+- mapy prezentującej ich lokalizacje (punkty – wykorzystując geometrię adresu z formularza rejestracyjnego)
+
+
+## Dependencies
+
+npm install -g @angular/cli (version 10.2.0.)
+
+ng add @angular/material
+
+npm install ol
 
 ## Build
 
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
 
-## Running unit tests
+## To run from /dist folder
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+npm install angular-http-server -g
 
-## Running end-to-end tests
+angular-http-server --path path/to/dist/folder
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+## Development server
 
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`.
