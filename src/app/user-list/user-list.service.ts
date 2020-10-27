@@ -1,25 +1,12 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {User} from './user';
+import {Observable} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserListService {
   public usersList: Array<User> = [
-    {
-      firstName: 'Michał',
-      lastName: 'Biedzki',
-      email: 'mbiedzki@gmail.com',
-      voivodeship: '',
-      district: '',
-      community: '',
-      town: 'Warszawa',
-      street: '',
-      zip: '',
-      number: '',
-      longitude: 52.202741,
-      latitude: 21.015057
-    },
     {
       firstName: 'Jan',
       lastName: 'Kowalski',
@@ -49,5 +36,16 @@ export class UserListService {
       latitude: 18.644489
     }
   ];
+  public getUsersList(): any {
+    return new Observable(observer => {
+      observer.next(this.usersList);
+    });
+  }
+  public updateUsersList(user): any {
+    return new Observable(observer => {
+      this.usersList.push(user);
+      observer.next(this.usersList);
+    });
+  }
   constructor() {}
 }

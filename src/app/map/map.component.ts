@@ -13,6 +13,13 @@ import Point from 'ol/geom/Point';
 import {User} from '../user-list/user';
 import {defaults as Defaults} from 'ol/control';
 import {Control} from 'ol/control';
+import {ChangeDetectorRef} from '@angular/core';
+import {Injectable} from '@angular/core';
+import {timeout} from 'rxjs/operators';
+
+@Injectable({
+  providedIn: 'root'
+})
 
 @Component({
   selector: 'app-map',
@@ -20,8 +27,9 @@ import {Control} from 'ol/control';
   styleUrls: ['./map.component.css']
 })
 export class MapComponent implements OnInit {
-  map: any;
-  private usersList: Array<User> = [];
+  public map: any;
+  public layer: any;
+  public usersList: Array<User> = [];
   public points: Array<Feature> = [];
 
   pointStyle(feature: Feature): any {
@@ -43,12 +51,12 @@ export class MapComponent implements OnInit {
     });
   }
 
-  constructor(
-    public userListService: UserListService
-  ) {
+  public updateUserLayer(): any {
+    document.getElementById('users_map').innerHTML = '';
+    this.renderUserMap();
   }
 
-  ngOnInit(): void {
+  public renderUserMap(): any {
     this.usersList = this.userListService.usersList;
     this.usersList.forEach(user => {
       this.points.push(new Feature({
@@ -60,7 +68,7 @@ export class MapComponent implements OnInit {
       target: 'users_map',
       layers: [
         new TileLayer({
-          source: new OSM()
+          source: new OSM(),
         })
       ],
       view: new View({
@@ -72,12 +80,21 @@ export class MapComponent implements OnInit {
         rotate: false
       })
     });
-    const layer = new VectorLayer({
+    this.layer = new VectorLayer({
       source: new VectorSource({
         features: this.points
       }),
-      style: this.pointStyle
+      style: this.pointStyle,
     });
-    this.map.addLayer(layer);
+    this.map.addLayer(this.layer);
+  }
+
+  constructor(
+    public userListService: UserListService
+  ) {
+  }
+
+  ngOnInit(): void {
+    this.renderUserMap();
   }
 }

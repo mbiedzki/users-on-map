@@ -108,8 +108,9 @@
       </div>
     </mat-card-content>
     <mat-card-actions>
-      <button mat-raised-button color="warn" type="submit" [disabled]="!userForm.valid || userForm.untouched">Dodaj</button>
+      <button id="submitButton" mat-raised-button color="warn" type="submit" [disabled]="!userForm.valid || userForm.untouched">Dodaj</button>
       <button mat-raised-button color="primary" type="button" on-click="closeForm()">Zamknij</button>
     </mat-card-actions>
+    <mat-error *ngIf="message">{{message}}</mat-error>
   </mat-card>
 </form>

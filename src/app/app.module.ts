@@ -9,7 +9,7 @@ import { UserListComponent } from './user-list/user-list.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatCardModule} from '@angular/material/card';
 import {MatToolbarModule} from '@angular/material/toolbar';
-import { UserFormComponent } from './user-form/user-form.component';
+import { UserFormComponent } from './user-list/user-form/user-form.component';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
