@@ -40,7 +40,7 @@ Run `ng build` to build the project. The build artifacts will be stored in the `
 
 npm install angular-http-server -g
 
-angular-http-server --path path/to/dist/folder
+angular-http-server --path ./dist/users-on-map
 
 ## Development server
 
