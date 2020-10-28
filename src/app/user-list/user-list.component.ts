@@ -23,7 +23,6 @@ export class UserListComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(result);
       if (!(typeof result === 'undefined') && (result !== 'no_new_user')) {
         this.userListService.updateUsersList(result).subscribe((usersListData: User[]) => {
           this.usersList.data = usersListData;

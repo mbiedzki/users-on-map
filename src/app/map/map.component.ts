@@ -12,10 +12,7 @@ import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
 import {User} from '../user-list/user';
 import {defaults as Defaults} from 'ol/control';
-import {Control} from 'ol/control';
-import {ChangeDetectorRef} from '@angular/core';
 import {Injectable} from '@angular/core';
-import {timeout} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
