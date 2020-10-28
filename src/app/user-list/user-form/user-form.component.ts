@@ -105,7 +105,7 @@ export class UserFormComponent {
           };
           this.dialogRef.close(user);
         } else if (response.features.length === 0) {
-          this.message = 'Adres nie został znaleziony, prosze sprawdzić dane';
+          this.message = 'Adres nie został znaleziony, proszę sprawdzić dane';
         }
       })
       .catch(() => {
