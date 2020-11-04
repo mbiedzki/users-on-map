@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import { HttpService} from '../../http.service';
 import { UserListService} from '../user-list.service';
+import {MatSelectChange} from '@angular/material/select';
 
 
 @Component({
@@ -10,50 +11,53 @@ import { UserListService} from '../user-list.service';
   templateUrl: './user-form.component.html',
   styleUrls: ['./user-form.component.css']
 })
-export class UserFormComponent {
+export class UserFormComponent implements OnInit {
   userForm = this.fb.group({
     firstName: [null, Validators.required],
     lastName: [null, Validators.required],
     email: [null, Validators.required],
     voivodeship: [null, Validators.required],
-    district: [null, Validators.required],
-    community: [null, Validators.required],
-    town: [null, Validators.required],
-    street: [null, Validators.required],
-    zip: [null, Validators.compose([
+    district: [{value: null, disabled: true}, Validators.required],
+    community: [{value: null, disabled: true}, Validators.required],
+    town: [{value: null, disabled: true}, Validators.required],
+    street: [{value: null, disabled: true}, Validators.required],
+    zip: [{value: null, disabled: true}, Validators.compose([
       Validators.required, Validators.minLength(5), Validators.maxLength(5)])
     ],
-    number: [null, Validators.required]
+    number: [{value: null, disabled: true}, Validators.required]
   });
   message = '';
 
   body = [];
 
-  voivodeships = [
-    {name: 'dolnośląskie'},
-    {name: 'kujawsko-pomorskie'},
-    {name: 'lubelskie'},
-    {name: 'lubuskie'},
-    {name: 'łódzkie'},
-    {name: 'małopolskie'},
-    {name: 'mazowieckie'},
-    {name: 'opolskie'},
-    {name: 'podkarpackie'},
-    {name: 'podlaskie'},
-    {name: 'pomorskie'},
-    {name: 'śląskie'},
-    {name: 'świętokrzyskie'},
-    {name: 'warmińsko-mazurskie'},
-    {name: 'wielkopolskie'},
-    {name: 'zachodniopomorskie'},
-  ];
+  voivodeships = [];
+  districts = [];
+  communities = [];
+
   constructor(
     private fb: FormBuilder,
     public dialog: MatDialog,
     private httpService: HttpService,
-    private userListService: UserListService,
     public dialogRef: MatDialogRef<UserFormComponent>
   ) {}
+
+  ngOnInit(): void {
+    this.body = [
+      {
+        level: 'woj',
+        q: ''
+      }];
+    this.httpService.getVoivodeships(this.body)
+      .then(response => {
+        if (response) {
+          this.message = '';
+          this.voivodeships = response;
+        }
+      })
+      .catch((error) => {
+        this.message = 'Błąd pobrania listy województw';
+      });
+    }
   onSubmit(): any {
     this.body = [
       {
@@ -114,5 +118,77 @@ export class UserFormComponent {
   }
   closeForm(): any {
     this.dialogRef.close('no_new_user');
+  }
+
+  handleVoivodeshipChange(value: MatSelectChange): any {
+    if (value) {
+      this.body = [
+        {
+          level: 'woj',
+          v: this.userForm.controls.voivodeship.value
+        },
+        {
+          level: 'pow',
+          q: ''
+        }
+      ];
+      this.httpService.getDistricts(this.body)
+        .then(response => {
+          if (response) {
+            this.message = '';
+            this.districts = response;
+            this.userForm.controls.district.enable();
+
+            this.userForm.controls.district.reset();
+            this.userForm.controls.community.reset();
+            this.userForm.controls.town.reset();
+            this.userForm.controls.street.reset();
+            this.userForm.controls.zip.reset();
+            this.userForm.controls.number.reset();
+
+            this.communities = [];
+          }
+        })
+        .catch((error) => {
+          this.message = 'Błąd pobrania listy powiatów';
+        });
+    }
+  }
+
+  handleDistrictChange(value: MatSelectChange): any {
+    if (value) {
+      this.body = [
+        {
+          level: 'woj',
+          v: this.userForm.controls.voivodeship.value
+        },
+        {
+          level: 'pow',
+          v: this.userForm.controls.district.value
+        },
+        {
+          level: 'gmi',
+          q: ''
+        }
+      ];
+      this.httpService.getCommunities(this.body)
+        .then(response => {
+          if (response) {
+            this.message = '';
+            this.communities = response;
+            this.userForm.controls.community.enable();
+
+            this.userForm.controls.community.reset();
+            this.userForm.controls.town.reset();
+            this.userForm.controls.street.reset();
+            this.userForm.controls.zip.reset();
+            this.userForm.controls.number.reset();
+
+          }
+        })
+        .catch((error) => {
+          this.message = 'Błąd pobrania listy gmin';
+        });
+    }
   }
 }

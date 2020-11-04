@@ -37,9 +37,9 @@
         </div>
         <div class="col">
           <mat-form-field class="full-width">
-            <mat-select placeholder="Województwo" formControlName="voivodeship">
-              <mat-option *ngFor="let voivodeship of voivodeships" [value]="voivodeship.name">
-                {{ voivodeship.name }}
+            <mat-select placeholder="Województwo" formControlName="voivodeship" (selectionChange)="handleVoivodeshipChange($event)">
+              <mat-option *ngFor="let voivodeship of voivodeships" [value]="voivodeship.value">
+                {{ voivodeship.value }}
               </mat-option>
             </mat-select>
             <mat-error *ngIf="userForm.controls['voivodeship'].hasError('required')">
@@ -51,15 +51,23 @@
       <div class="row">
         <div class="col">
           <mat-form-field class="full-width">
-            <input matInput placeholder="Powiat" formControlName="district">
-            <mat-error *ngIf="userForm.controls['district'].hasError('required')">
-              Powiat jest <strong>wymagany</strong>
-            </mat-error>
+          <mat-select placeholder="Powiat" formControlName="district" (selectionChange)="handleDistrictChange($event)">
+            <mat-option *ngFor="let district of districts" [value]="district.value">
+              {{ district.value }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="userForm.controls['district'].hasError('required')">
+            Powiat jest <strong>wymagany</strong>
+          </mat-error>
           </mat-form-field>
         </div>
         <div class="col">
           <mat-form-field class="full-width">
-            <input matInput placeholder="Gmina" formControlName="community">
+            <mat-select placeholder="Gmina" formControlName="community" (selectionChange)="handleCommunityChange($event)">
+              <mat-option *ngFor="let community of communities" [value]="community.value">
+                {{ community.value }}
+              </mat-option>
+            </mat-select>
             <mat-error *ngIf="userForm.controls['community'].hasError('required')">
               Gmina jest <strong>wymagana</strong>
             </mat-error>

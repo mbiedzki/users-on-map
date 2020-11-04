@@ -3,7 +3,6 @@ import {UserListService} from './user-list.service';
 import {User} from './user';
 import {MatDialog} from '@angular/material/dialog';
 import {UserFormComponent} from './user-form/user-form.component';
-import {ChangeDetectorRef} from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import {MapComponent} from '../map/map.component';
 
@@ -35,7 +34,6 @@ export class UserListComponent implements OnInit {
   constructor(
     public userListService: UserListService,
     public dialog: MatDialog,
-    public cdRef: ChangeDetectorRef,
     public mapComponent: MapComponent
   ) {
   }
