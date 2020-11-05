@@ -1,20 +1,28 @@
-@import '~@angular/material/prebuilt-themes/indigo-pink.css'
+@import '~@angular/material/prebuilt-themes/indigo-pink.css' html, body;
 
-html, body; { height: 100%; }
-body { margin: 5px; font-family: Roboto, "Helvetica Neue", sans-serif; }
-
-.float-container {
-  padding: 20px;
+body {
+  margin: 5px;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
-.float-child {
-  width: 46%;
-  height: 700px;
+.float-container {
+  margin-top: 10px;
+}
+
+.float-child-left {
+  width: 49%;
+
   float: left;
-  padding: 10px;
-  border: 1px solid darkgrey;
-  margin-right: 5px;
+  margin-right: 1px;
   margin-left: 5px;
+}
+
+.float-child-right {
+  width: 49%;
+
+  float: right;
+  margin-right: 5px;
+  margin-left: 1px;
 }
 
 .title {
