@@ -36,6 +36,7 @@ npm install ol
 
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
 
+If you want to build for Tomcat server use `ng build --base-href`
 ## To run from /dist folder
 
 npm install angular-http-server -g
