@@ -5,6 +5,7 @@
 <form [formGroup]="userForm" novalidate (ngSubmit)="onSubmit()">
   <mat-card class="user-form">
     <mat-card-content>
+      <div class="my-spinner" *ngIf="displaySpinner"><mat-spinner></mat-spinner></div>
       <div class="row">
         <div class="col">
           <mat-form-field class="full-width">
@@ -138,10 +139,10 @@
       </div>
     </mat-card-content>
     <mat-card-actions>
-      <button id="submitButton" mat-raised-button color="warn" type="submit"
-              [disabled]="!userForm.valid || userForm.untouched">Dodaj
-      </button>
-      <button mat-raised-button color="primary" type="button" on-click="closeForm()">Zamknij</button>
+        <button id="submitButton" mat-raised-button color="warn" type="submit"
+                [disabled]="!userForm.valid || userForm.untouched">Dodaj
+        </button>
+        <button mat-raised-button color="primary" type="button" on-click="closeForm()">Zamknij</button>
     </mat-card-actions>
     <mat-error *ngIf="message">{{message}}</mat-error>
   </mat-card>

@@ -23,12 +23,10 @@ export class UserFormComponent implements OnInit {
     zip: [{value: null, disabled: true}, Validators.required],
     number: [{value: null, disabled: true}, Validators.required]
   });
+  displaySpinner = false;
   message = '';
-
   body = [];
-
   streetInput = new FormControl({value: null, disabled: true}, Validators.required);
-
   voivodeships = [];
   districts = [];
   communities = [];
@@ -44,7 +42,12 @@ export class UserFormComponent implements OnInit {
     public dialogRef: MatDialogRef<UserFormComponent>
   ) {}
 
+  sortByValue(array): any[] {
+    return array.sort((a, b) => a.value.localeCompare(b.value));
+  }
+
   ngOnInit(): void {
+    this.displaySpinner = true;
     this.body = [
       {
         level: 'woj',
@@ -52,17 +55,20 @@ export class UserFormComponent implements OnInit {
       }];
     this.httpService.getVoivodeships(this.body)
       .then(response => {
+        this.displaySpinner = false;
         if (response) {
           this.message = '';
-          this.voivodeships = response;
+          this.voivodeships = this.sortByValue(response);
         }
       })
       .catch((error) => {
+        this.displaySpinner = false;
         this.message = 'Błąd pobrania listy województw';
       });
     }
 
   onSubmit(): any {
+    this.displaySpinner = true;
     this.body = [
       {
         level: 'woj',
@@ -95,6 +101,7 @@ export class UserFormComponent implements OnInit {
     ];
     this.httpService.getCoords(this.body)
       .then(response => {
+        this.displaySpinner = false;
         if (response && response.features.length > 0) {
           this.message = '';
           const user = {
@@ -113,10 +120,12 @@ export class UserFormComponent implements OnInit {
           };
           this.dialogRef.close(user);
         } else if (response.features.length === 0) {
+          this.displaySpinner = false;
           this.message = 'Adres nie został znaleziony, proszę sprawdzić dane';
         }
       })
       .catch(() => {
+        this.displaySpinner = false;
         this.message = 'Błąd połączenia z serwerem';
       });
   }
@@ -125,6 +134,7 @@ export class UserFormComponent implements OnInit {
   }
 
   handleVoivodeshipChange(value: MatSelectChange): any {
+    this.displaySpinner = true;
     if (value) {
       this.body = [
         {
@@ -138,9 +148,10 @@ export class UserFormComponent implements OnInit {
       ];
       this.httpService.getDistricts(this.body)
         .then(response => {
+          this.displaySpinner = false;
           if (response) {
             this.message = '';
-            this.districts = response;
+            this.districts = this.sortByValue(response);
 
             this.userForm.controls.district.reset();
             this.userForm.controls.community.reset();
@@ -161,12 +172,14 @@ export class UserFormComponent implements OnInit {
           }
         })
         .catch((error) => {
+          this.displaySpinner = false;
           this.message = 'Błąd pobrania listy powiatów';
         });
     }
   }
 
   handleDistrictChange(value: MatSelectChange): any {
+    this.displaySpinner = true;
     if (value) {
       this.body = [
         {
@@ -184,9 +197,10 @@ export class UserFormComponent implements OnInit {
       ];
       this.httpService.getCommunities(this.body)
         .then(response => {
+          this.displaySpinner = false;
           if (response) {
             this.message = '';
-            this.communities = response;
+            this.communities = this.sortByValue(response);
 
             this.userForm.controls.community.reset();
             this.userForm.controls.town.reset();
@@ -204,12 +218,14 @@ export class UserFormComponent implements OnInit {
           }
         })
         .catch((error) => {
+          this.displaySpinner = false;
           this.message = 'Błąd pobrania listy gmin';
         });
     }
   }
 
   handleCommunityChange(value: MatSelectChange): any {
+    this.displaySpinner = true;
     if (value) {
       this.body = [
         {
@@ -231,9 +247,10 @@ export class UserFormComponent implements OnInit {
       ];
       this.httpService.getTowns(this.body)
         .then(response => {
+          this.displaySpinner = false;
           if (response) {
             this.message = '';
-            this.towns = response;
+            this.towns = this.sortByValue(response);
 
             this.userForm.controls.town.reset();
             this.streetInput.reset();
@@ -248,6 +265,7 @@ export class UserFormComponent implements OnInit {
           }
         })
         .catch((error) => {
+          this.displaySpinner = false;
           this.message = 'Błąd pobrania listy miejscowości';
         });
     }
@@ -267,6 +285,7 @@ export class UserFormComponent implements OnInit {
 
   handleStreetChange(value: Event): any {
     if (this.streetInput.value.length >= 3) {
+      this.displaySpinner = true;
       this.body = [
         {
           level: 'woj',
@@ -291,24 +310,30 @@ export class UserFormComponent implements OnInit {
       ];
       this.httpService.getStreets(this.body)
         .then(response => {
-          if (response) {
+          this.displaySpinner = false;
+          if (response && response.length > 0) {
             this.message = '';
-            this.streets = response;
+            this.streets = this.sortByValue(response);
 
             this.userForm.controls.zip.reset();
             this.userForm.controls.number.reset();
 
             this.userForm.controls.zip.disable();
             this.userForm.controls.number.disable();
+          } else {
+            this.message = 'Nie znaleziono żadnej ulicy rozpoczynającej sie od: "' + this.streetInput.value + '"';
+            this.streets = [];
           }
         })
         .catch((error) => {
+          this.displaySpinner = false;
           this.message = 'Błąd pobrania listy ulic';
         });
     }
   }
 
   handleStreetSelectionChange(value: MatAutocompleteSelectedEvent): any {
+    this.displaySpinner = true;
     if (value) {
       this.body = [
         {
@@ -338,9 +363,10 @@ export class UserFormComponent implements OnInit {
       ];
       this.httpService.getZips(this.body)
         .then(response => {
+          this.displaySpinner = false;
           if (response) {
             this.message = '';
-            this.zips = response;
+            this.zips = this.sortByValue(response);
 
             this.userForm.controls.zip.reset();
             this.userForm.controls.number.reset();
@@ -349,12 +375,14 @@ export class UserFormComponent implements OnInit {
           }
         })
         .catch((error) => {
+          this.displaySpinner = false;
           this.message = 'Błąd pobrania listy kodów';
         });
     }
   }
 
   handleZipChange(value: MatSelectChange): any {
+    this.displaySpinner = true;
     if (value) {
       this.body = [
         {
@@ -388,15 +416,17 @@ export class UserFormComponent implements OnInit {
       ];
       this.httpService.getNumbers(this.body)
         .then(response => {
+          this.displaySpinner = false;
           if (response) {
             this.message = '';
-            this.numbers = response;
+            this.numbers = this.sortByValue(response);
 
             this.userForm.controls.number.reset();
             this.userForm.controls.number.enable();
           }
         })
         .catch((error) => {
+          this.displaySpinner = false;
           this.message = 'Błąd pobrania listy kodów';
         });
     }
