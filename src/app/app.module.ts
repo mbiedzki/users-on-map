@@ -16,6 +16,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatRadioModule } from '@angular/material/radio';
 import { ReactiveFormsModule } from '@angular/forms';
 import {MatDialogModule} from '@angular/material/dialog';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import {MatDialogModule} from '@angular/material/dialog';
     MatRadioModule,
     ReactiveFormsModule,
     MatDialogModule,
-    HttpClientModule
+    MatAutocompleteModule,
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

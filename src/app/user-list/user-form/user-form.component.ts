@@ -1,10 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import {FormBuilder, FormControl, Validators} from '@angular/forms';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import { HttpService} from '../../http.service';
-import { UserListService} from '../user-list.service';
 import {MatSelectChange} from '@angular/material/select';
-
+import {MatAutocompleteModule, MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
 
 @Component({
   selector: 'app-user-form',
@@ -21,18 +20,22 @@ export class UserFormComponent implements OnInit {
     community: [{value: null, disabled: true}, Validators.required],
     town: [{value: null, disabled: true}, Validators.required],
     street: [{value: null, disabled: true}, Validators.required],
-    zip: [{value: null, disabled: true}, Validators.compose([
-      Validators.required, Validators.minLength(5), Validators.maxLength(5)])
-    ],
+    zip: [{value: null, disabled: true}, Validators.required],
     number: [{value: null, disabled: true}, Validators.required]
   });
   message = '';
 
   body = [];
 
+  streetInput = new FormControl({value: null, disabled: true}, Validators.required);
+
   voivodeships = [];
   districts = [];
   communities = [];
+  towns = [];
+  zips = [];
+  streets = [];
+  numbers = [];
 
   constructor(
     private fb: FormBuilder,
@@ -58,6 +61,7 @@ export class UserFormComponent implements OnInit {
         this.message = 'Błąd pobrania listy województw';
       });
     }
+
   onSubmit(): any {
     this.body = [
       {
@@ -82,7 +86,7 @@ export class UserFormComponent implements OnInit {
       },
       {
         level: 'kod',
-        v: this.userForm.controls.zip.value.slice(0, 2) + '-' + this.userForm.controls.zip.value.slice(2, 5)
+        v: this.userForm.controls.zip.value
       },
       {
         level: 'nr',
@@ -137,14 +141,21 @@ export class UserFormComponent implements OnInit {
           if (response) {
             this.message = '';
             this.districts = response;
-            this.userForm.controls.district.enable();
 
             this.userForm.controls.district.reset();
             this.userForm.controls.community.reset();
             this.userForm.controls.town.reset();
-            this.userForm.controls.street.reset();
+            this.streetInput.reset();
             this.userForm.controls.zip.reset();
             this.userForm.controls.number.reset();
+            this.streets = [];
+
+            this.userForm.controls.district.enable();
+            this.userForm.controls.community.disable();
+            this.userForm.controls.town.disable();
+            this.streetInput.disable();
+            this.userForm.controls.zip.disable();
+            this.userForm.controls.number.disable();
 
             this.communities = [];
           }
@@ -176,18 +187,217 @@ export class UserFormComponent implements OnInit {
           if (response) {
             this.message = '';
             this.communities = response;
-            this.userForm.controls.community.enable();
 
             this.userForm.controls.community.reset();
             this.userForm.controls.town.reset();
-            this.userForm.controls.street.reset();
+            this.streetInput.reset();
             this.userForm.controls.zip.reset();
             this.userForm.controls.number.reset();
+            this.streets = [];
+
+            this.userForm.controls.community.enable();
+            this.userForm.controls.town.disable();
+            this.streetInput.disable();
+            this.userForm.controls.zip.disable();
+            this.userForm.controls.number.disable();
 
           }
         })
         .catch((error) => {
           this.message = 'Błąd pobrania listy gmin';
+        });
+    }
+  }
+
+  handleCommunityChange(value: MatSelectChange): any {
+    if (value) {
+      this.body = [
+        {
+          level: 'woj',
+          v: this.userForm.controls.voivodeship.value
+        },
+        {
+          level: 'pow',
+          v: this.userForm.controls.district.value
+        },
+        {
+          level: 'gmi',
+          v: this.userForm.controls.community.value
+        },
+        {
+          level: 'msc',
+          q: ''
+        }
+      ];
+      this.httpService.getTowns(this.body)
+        .then(response => {
+          if (response) {
+            this.message = '';
+            this.towns = response;
+
+            this.userForm.controls.town.reset();
+            this.streetInput.reset();
+            this.userForm.controls.zip.reset();
+            this.userForm.controls.number.reset();
+            this.streets = [];
+
+            this.userForm.controls.town.enable();
+            this.streetInput.disable();
+            this.userForm.controls.zip.disable();
+            this.userForm.controls.number.disable();
+          }
+        })
+        .catch((error) => {
+          this.message = 'Błąd pobrania listy miejscowości';
+        });
+    }
+  }
+  handleTownChange(value: MatSelectChange): any {
+    if (value) {
+      this.streetInput.reset();
+      this.userForm.controls.zip.reset();
+      this.userForm.controls.number.reset();
+      this.streets = [];
+
+      this.streetInput.enable();
+      this.userForm.controls.zip.disable();
+      this.userForm.controls.number.disable();
+    }
+  }
+
+  handleStreetChange(value: Event): any {
+    if (this.streetInput.value.length >= 3) {
+      this.body = [
+        {
+          level: 'woj',
+          v: this.userForm.controls.voivodeship.value
+        },
+        {
+          level: 'pow',
+          v: this.userForm.controls.district.value
+        },
+        {
+          level: 'gmi',
+          v: this.userForm.controls.community.value
+        },
+        {
+          level: 'msc',
+          v: this.userForm.controls.town.value
+        },
+        {
+          level: 'ulc',
+          q: this.streetInput.value
+        }
+      ];
+      this.httpService.getStreets(this.body)
+        .then(response => {
+          if (response) {
+            this.message = '';
+            this.streets = response;
+
+            this.userForm.controls.zip.reset();
+            this.userForm.controls.number.reset();
+
+            this.userForm.controls.zip.disable();
+            this.userForm.controls.number.disable();
+          }
+        })
+        .catch((error) => {
+          this.message = 'Błąd pobrania listy ulic';
+        });
+    }
+  }
+
+  handleStreetSelectionChange(value: MatAutocompleteSelectedEvent): any {
+    if (value) {
+      this.body = [
+        {
+          level: 'woj',
+          v: this.userForm.controls.voivodeship.value
+        },
+        {
+          level: 'pow',
+          v: this.userForm.controls.district.value
+        },
+        {
+          level: 'gmi',
+          v: this.userForm.controls.community.value
+        },
+        {
+          level: 'msc',
+          v: this.userForm.controls.town.value
+        },
+        {
+          level: 'ulc',
+          v: this.streetInput.value
+        },
+        {
+          level: 'kod',
+          q: ''
+        }
+      ];
+      this.httpService.getZips(this.body)
+        .then(response => {
+          if (response) {
+            this.message = '';
+            this.zips = response;
+
+            this.userForm.controls.zip.reset();
+            this.userForm.controls.number.reset();
+            this.userForm.controls.zip.enable();
+            this.userForm.controls.number.disable();
+          }
+        })
+        .catch((error) => {
+          this.message = 'Błąd pobrania listy kodów';
+        });
+    }
+  }
+
+  handleZipChange(value: MatSelectChange): any {
+    if (value) {
+      this.body = [
+        {
+          level: 'woj',
+          v: this.userForm.controls.voivodeship.value
+        },
+        {
+          level: 'pow',
+          v: this.userForm.controls.district.value
+        },
+        {
+          level: 'gmi',
+          v: this.userForm.controls.community.value
+        },
+        {
+          level: 'msc',
+          v: this.userForm.controls.town.value
+        },
+        {
+          level: 'ulc',
+          v: this.streetInput.value
+        },
+        {
+          level: 'kod',
+          v: this.userForm.controls.zip.value
+        },
+        {
+          level: 'nr',
+          q: ''
+        }
+      ];
+      this.httpService.getNumbers(this.body)
+        .then(response => {
+          if (response) {
+            this.message = '';
+            this.numbers = response;
+
+            this.userForm.controls.number.reset();
+            this.userForm.controls.number.enable();
+          }
+        })
+        .catch((error) => {
+          this.message = 'Błąd pobrania listy kodów';
         });
     }
   }

@@ -37,7 +37,8 @@
         </div>
         <div class="col">
           <mat-form-field class="full-width">
-            <mat-select placeholder="Województwo" formControlName="voivodeship" (selectionChange)="handleVoivodeshipChange($event)">
+            <mat-select placeholder="Województwo" formControlName="voivodeship"
+                        (selectionChange)="handleVoivodeshipChange($event)">
               <mat-option *ngFor="let voivodeship of voivodeships" [value]="voivodeship.value">
                 {{ voivodeship.value }}
               </mat-option>
@@ -51,19 +52,21 @@
       <div class="row">
         <div class="col">
           <mat-form-field class="full-width">
-          <mat-select placeholder="Powiat" formControlName="district" (selectionChange)="handleDistrictChange($event)">
-            <mat-option *ngFor="let district of districts" [value]="district.value">
-              {{ district.value }}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="userForm.controls['district'].hasError('required')">
-            Powiat jest <strong>wymagany</strong>
-          </mat-error>
+            <mat-select placeholder="Powiat" formControlName="district"
+                        (selectionChange)="handleDistrictChange($event)">
+              <mat-option *ngFor="let district of districts" [value]="district.value">
+                {{ district.value }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="userForm.controls['district'].hasError('required')">
+              Powiat jest <strong>wymagany</strong>
+            </mat-error>
           </mat-form-field>
         </div>
         <div class="col">
           <mat-form-field class="full-width">
-            <mat-select placeholder="Gmina" formControlName="community" (selectionChange)="handleCommunityChange($event)">
+            <mat-select placeholder="Gmina" formControlName="community"
+                        (selectionChange)="handleCommunityChange($event)">
               <mat-option *ngFor="let community of communities" [value]="community.value">
                 {{ community.value }}
               </mat-option>
@@ -77,7 +80,11 @@
       <div class="row">
         <div class="col">
           <mat-form-field class="full-width">
-            <input matInput placeholder="Miejscowość" formControlName="town">
+            <mat-select placeholder="Miejscowość" formControlName="town" (selectionChange)="handleTownChange($event)">
+              <mat-option *ngFor="let town of towns" [value]="town.value">
+                {{ town.value }}
+              </mat-option>
+            </mat-select>
             <mat-error *ngIf="userForm.controls['town'].hasError('required')">
               Miejscowość jest <strong>wymagana</strong>
             </mat-error>
@@ -85,29 +92,44 @@
         </div>
         <div class="col">
           <mat-form-field class="full-width">
-            <input matInput #zip maxlength="5" placeholder="Kod pocztowy" type="text" formControlName="zip" pattern="^[0-9]{5}$">
-            <mat-error *ngIf="userForm.controls['zip'].hasError('pattern')">
-              Kod pocztowy musi być w formacie <strong>XXXXX</strong> i zawierać tylko cyfry
+            <input type="text"
+                   placeholder="Ulica"
+                   matInput
+                   [formControl]="streetInput"
+                   [matAutocomplete]="auto"
+                   (input)="handleStreetChange($event)">
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="handleStreetSelectionChange($event)">
+              <mat-option *ngFor="let street of streets" [value]="street.value">
+                {{ street.value}}
+              </mat-option>
+            </mat-autocomplete>
+            <mat-hint align="end">wpisz co najmniej 3 litery</mat-hint>
+            <mat-error *ngIf="userForm.controls['street'].hasError('required')">
+              Ulica jest <strong>wymagana</strong>
             </mat-error>
-            <mat-error *ngIf="userForm.controls['zip'].hasError('required')">
-              Kod pocztowy jest <strong>wymagany</strong>
-            </mat-error>
-            <mat-hint align="end">{{zip.value.length}} / 5</mat-hint>
           </mat-form-field>
         </div>
       </div>
       <div class="row">
         <div class="col">
           <mat-form-field class="full-width">
-            <input matInput placeholder="Ulica" formControlName="street">
-            <mat-error *ngIf="userForm.controls['street'].hasError('required')">
-              Ulica jest <strong>wymagana</strong>
+            <mat-select placeholder="Kod pocztowy" formControlName="zip" (selectionChange)="handleZipChange($event)">
+              <mat-option *ngFor="let zip of zips" [value]="zip.value">
+                {{ zip.value }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="userForm.controls['zip'].hasError('required')">
+              Kod pocztowy jest <strong>wymagany</strong>
             </mat-error>
           </mat-form-field>
         </div>
         <div class="col">
           <mat-form-field class="full-width">
-            <input matInput placeholder="Numer domu" formControlName="number">
+            <mat-select placeholder="Numer domu" formControlName="number">
+              <mat-option *ngFor="let number of numbers" [value]="number.value">
+                {{ number.value }}
+              </mat-option>
+            </mat-select>
             <mat-error *ngIf="userForm.controls['number'].hasError('required')">
               Numer domu jest <strong>wymagany</strong>
             </mat-error>
@@ -116,7 +138,9 @@
       </div>
     </mat-card-content>
     <mat-card-actions>
-      <button id="submitButton" mat-raised-button color="warn" type="submit" [disabled]="!userForm.valid || userForm.untouched">Dodaj</button>
+      <button id="submitButton" mat-raised-button color="warn" type="submit"
+              [disabled]="!userForm.valid || userForm.untouched">Dodaj
+      </button>
       <button mat-raised-button color="primary" type="button" on-click="closeForm()">Zamknij</button>
     </mat-card-actions>
     <mat-error *ngIf="message">{{message}}</mat-error>
